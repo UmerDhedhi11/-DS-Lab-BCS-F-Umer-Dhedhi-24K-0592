@@ -1,0 +1,52 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class Box{
+	private:
+		int* num;
+	public:
+		Box(int number){
+			num = new int(number);
+		}
+		~Box(){
+			delete num;
+		}
+		Box(const Box &obj){
+			num = new int(*obj.num);
+		}
+		Box& operator=(const Box &b){
+	        if (this != &b){   
+	            delete num;    
+	            num = new int(*b.num);
+	        }
+	        return *this;
+	    }
+	    void setNum(int Num){
+	    	delete num;
+	    	num = new int(Num);
+		}
+		int getNum(){
+			return *num;
+		}
+};
+
+int main(){
+	Box b1(32);
+	cout << "Number 1: " << b1.getNum() << endl;
+	Box b2 = b1;
+	b2.setNum(40);
+	cout << "Number 1: " << b1.getNum() << endl;
+	cout << "Number 2: " << b2.getNum() << endl;
+	Box b3(98);
+	cout << "Number 3: " << b3.getNum() << endl;
+	Box b4(100);
+	cout << "Number 4: " << b4.getNum() << endl;
+	b4 = b3;
+	cout << "Number 4: " << b4.getNum() << endl;
+	b4.setNum(54);
+	cout << "Number 3: " << b3.getNum() << endl;
+	cout << "Number 4: " << b4.getNum() << endl;
+	return 0;
+}
+
