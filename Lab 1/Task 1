@@ -1,0 +1,38 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class BankAccount{
+	private:
+		double balance;
+	public:
+		BankAccount(){
+			balance = 0;
+			cout << "Your balance is: $" << balance << endl;
+		}	
+		BankAccount(double bal){
+			balance = bal;
+			cout << "Your balance is: $" << balance << endl;
+		} 
+		BankAccount(const BankAccount &obj){
+			balance = obj.balance;
+		}
+		void deduction(double amount){
+			balance -= amount;
+		}
+		double getBal(){
+			return balance;
+		}
+};
+
+int main(){
+	BankAccount account1;
+	BankAccount account2(1000);
+	BankAccount account3(account2);
+	account3.deduction(200);
+	double bal_account3 = account3.getBal();
+	double bal_account2 = account2.getBal();
+	cout << "Account 3 Balance: $" << bal_account3 << endl;
+	cout << "Account 2 Balance: $" << bal_account2 << endl;
+	return 0;
+}
