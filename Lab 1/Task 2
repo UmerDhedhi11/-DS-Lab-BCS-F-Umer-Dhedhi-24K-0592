@@ -1,0 +1,53 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class Exam{
+	private:
+		char* stName;
+		string examDate;
+		float score;
+	public:
+		Exam(const char* name, string date, float marks){
+        	stName = new char[strlen(name) + 1];
+        	strcpy(stName, name);
+        	examDate = date;
+        	score = marks;
+    	}
+		void setName(const char* name){
+        	delete[] stName;  
+    		stName = new char[strlen(name) + 1];
+        	strcpy(stName, name);
+    	}
+		char* getName(){
+			return stName;
+		}
+		void setDate(string date){
+			examDate = date;
+		}
+		string getDate(){
+			return examDate;
+		}
+		void setScore(float marks){
+			score = marks;
+		}
+		float getScore(){
+			return score;
+		}
+		~Exam(){
+			delete[] stName;
+		}
+};
+
+int main(){
+	Exam islamiyat("Umer Dhedhi", "01-06-2025", 87.4);
+	cout << islamiyat.getName() << endl;
+	cout << islamiyat.getDate() << endl;
+	cout << islamiyat.getScore() << endl;
+	islamiyat.setScore(90.5);
+	cout << islamiyat.getScore() << endl;
+	Exam uoq = islamiyat;
+	cout << uoq.getScore() << endl;
+}
+
+Program runs fine but without deep copy the use of destructor results in agarbage return value at the end of the program
