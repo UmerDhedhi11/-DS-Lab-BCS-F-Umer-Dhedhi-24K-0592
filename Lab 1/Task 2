@@ -48,6 +48,7 @@ int main(){
 	cout << islamiyat.getScore() << endl;
 	Exam uoq = islamiyat;
 	cout << uoq.getScore() << endl;
+	return 0;
 }
 
 Program runs fine but without deep copy the use of destructor results in agarbage return value at the end of the program
