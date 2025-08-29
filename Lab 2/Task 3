@@ -1,0 +1,37 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main(){
+int** student;
+int n;
+int c;
+int i;
+int x;
+int sum;
+cout << "Enter number of students: ";
+cin >> n;
+float avg[n];
+student = new int*[n];
+for(i=0;i<n;i++){
+sum = 0;
+cout << "Enter number of courses for Student " << i+1 << ": ";
+cin >> c;
+student[i] = new int[c];
+for(x=0;x<c;x++){
+cout << "Enter marks for Student " << i+1 << " Course " << x+1 << ": ";
+cin >> student[i][x];
+sum += student[i][x];
+}
+avg[i] = sum/c;
+}
+for(i=0;i<n;i++){
+cout << "Student " << i+1 << " Average Marks: " << avg[i] << endl;
+}
+for(i=n;i>=0;i--){
+delete[] student[i];
+}
+delete student;
+return 0;
+}
+
