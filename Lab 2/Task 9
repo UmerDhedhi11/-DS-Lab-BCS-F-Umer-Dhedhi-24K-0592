@@ -1,0 +1,63 @@
+#include <iostream>
+using namespace std;
+
+int main(){
+    int r, c, i, j;
+    cout << "Enter number of rows: ";
+    cin >> r;
+    cout << "Enter number of columns: ";
+    cin >> c;
+    int** matrix = new int*[r];
+    for(i=0;i<r;i++){
+        matrix[i] = new int[c];
+	}
+    cout << "Enter elements of the matrix:" << endl;
+    for(i=0;i<r;i++){
+        for(j=0;j<c;j++){
+            cin >> matrix[i][j];
+        }
+    }
+    cout << "\nMatrix in normal form:" << endl;
+    for(i=0;i<r;i++){
+        for(j=0;j<c;j++){
+            cout << matrix[i][j] << " ";
+        }
+        cout << endl;
+    }
+    int nonZero = 0;
+    for(i=0;i<r;i++){
+        for(j=0;j<c;j++){
+            if(matrix[i][j] != 0){
+                nonZero++;
+            }
+        }
+    }
+    int** compressed = new int*[nonZero];
+    for(i=0;i<nonZero;i++){
+        compressed[i] = new int[3];
+    }
+    int k=0;
+    for(i=0;i<r;i++){
+        for(j=0;j<c;j++){
+            if(matrix[i][j] != 0){
+                compressed[k][0] = i;
+                compressed[k][1] = j;
+                compressed[k][2] = matrix[i][j];
+                k++;
+            }
+        }
+    }
+    cout << "\nCompressed form (row, col, value):" << endl;
+    for(i=0;i<nonZero;i++){
+        cout << compressed[i][0] << " " << compressed[i][1] << " " << compressed[i][2] << endl;
+    }
+    for(i=0;i<r;i++){
+        delete[] matrix[i];
+    }
+    delete[] matrix;
+    for(i=0;i<nonZero;i++){
+        delete[] compressed[i];
+    }
+    delete[] compressed;
+    return 0;
+}
