@@ -1,1 +1,96 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
 
+int** add(int** matrix1, int** matrix2, int r, int c){
+	int** r1; 
+	r1 = new int*[r];
+	int i, j;
+	for(i=0;i<r;i++){
+		r1[i] = new int[c];
+	}
+	for(i=0;i<r;i++){
+		for(j=0;j<c;j++){
+			r1[i][j] = matrix1[i][j] + matrix2[i][j];
+		}
+	}
+	return r1;
+}
+
+int** subtract(int** matrix1, int** matrix2, int r, int c){
+	int** r2; 
+	r2 = new int*[r];
+	int i, j;
+	for(i=0;i<r;i++){
+		r2[i] = new int[c];
+	}
+	for(i=0;i<r;i++){
+		for(j=0;j<c;j++){
+			r2[i][j] = matrix1[i][j] - matrix2[i][j];
+		}
+	}
+	return r2;
+}
+
+int main(){
+	int** m1;
+	int** m2;
+	int i, x, r, c;
+	cout << "Enter number of rows in the matrices: ";
+	cin >> r;
+	cout << "Enter number of columns in the matrices: ";
+	cin >> c;
+	m1 = new int*[r];
+	m2 = new int*[r];
+	for(i=0;i<r;i++){
+		m1[i] = new int[c];
+		m2[i] = new int[c];
+	}
+	cout << "Enter the data for matrix 1: " << endl;
+	for(i=0;i<r;i++){
+		for(x=0;x<c;x++){
+			cout << "Row " << i+1 << " Column " << x+1 << " : ";
+			cin >> m1[i][x];
+		}
+	}
+	cout << "Enter the data for matrix 2: " << endl;
+	for(i=0;i<r;i++){
+		for(x=0;x<c;x++){
+			cout << "Row " << i+1 << " Column " << x+1 << " : ";
+			cin >> m2[i][x];
+		}
+	}
+	int** r1 = add(m1, m2, r, c);
+	cout << "Matrix 1 + Matrix 2: " << endl;
+	for(i=0;i<r;i++){
+		for(x=0;x<c;x++){
+			cout << r1[i][x] << "\t";
+		}
+		cout << endl;
+	} 
+	int** r2 = subtract(m1, m2, r, c);
+	cout << "Matrix 1 - Matrix 2: " << endl;
+	for(i=0;i<r;i++){
+		for(x=0;x<c;x++){
+			cout << r2[i][x] << "\t";
+		}
+		cout << endl;
+	}
+	for(i=r-1;i>=0;i--){
+		delete[] m1[i];
+	}
+	delete[] m1;
+	for(i=r-1;i>=0;i--){
+		delete[] m2[i];
+	}
+	delete[] m2;
+	for(i=r-1;i>=0;i--){
+		delete[] r1[i];
+	}
+	delete[] r1;
+	for(i=r-1;i>=0;i--){
+		delete[] r2[i];
+	}
+	delete[] r2;
+	return 0;
+}
