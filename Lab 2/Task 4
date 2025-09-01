@@ -1,0 +1,63 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int* resize(int* old, int oldSize, int newSize){
+    if(newSize == oldSize){
+        return old;
+    }
+    int* newArray = new int[newSize];
+    int limit, i;
+    if(oldSize < newSize){
+    	limit = oldSize;
+	}
+	else{
+		limit = newSize;
+	}
+    for(i=0;i<limit;i++){
+        newArray[i] = old[i];
+    }
+    delete[] old;
+    return newArray;
+}
+
+
+int main(){
+	int n, i;
+	cout << "Enter number of months to store expenses: ";
+	cin >> n;
+	int* exp = new int[n];
+	cout << "Enter expenses: " << endl;
+	for(i=0;i<n;i++){
+		cout << "Month " << i+1 << " : $";
+		cin >> exp[i];
+	}
+	cout << "Expenses for " << n << " Months: \n";
+	for(i=0;i<n;i++){
+		cout << "Month " << i+1 << " : $" << exp[i] << endl;
+	}
+	int c;
+	cout << "If you want to resize the array to add more expenses, press '1'. Press '0' to quit: ";
+	cin >> c;
+	if(c == 1){
+		int ns;
+		cout << "Enter new size: ";
+		cin >> ns;
+		int* newExp = resize(exp, n, ns);
+		cout << "Enter further months' expenses: " << endl;
+		for(i=n;i<ns;i++){
+			cout << "Month " << i+1 << " : $";
+			cin >> newExp[i];
+		} 
+		cout << "New monthly expenses: " << endl;
+		for(i=0;i<ns;i++){
+			cout << "Month " << i+1 << " : $" << newExp[i] << endl;
+		}
+		delete[] newExp;
+	}
+	else{
+		delete[] exp; 
+	}
+	return 0;
+}
+
