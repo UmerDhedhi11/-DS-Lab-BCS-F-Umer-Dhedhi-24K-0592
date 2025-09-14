@@ -1,0 +1,139 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class SNode{
+	public:
+	    int data;
+	    SNode* next;
+	    SNode(int v){ 
+			data = v; 
+			next = NULL; 
+		}
+};
+
+class DNode{
+	public:
+	    int data;
+	    DNode* next;
+	    DNode* prev;
+	    DNode(int v){ 
+			data = v; 
+			next = NULL; 
+			prev = NULL; 
+		}
+};
+
+class SinglyList{
+	public:
+	    SNode* head;
+	    SNode* tail;
+	    SinglyList(){ 
+			head = tail = NULL; 
+		}
+	    void insert(int v){
+	        SNode* n = new SNode(v);
+	        if(!head){
+				head = tail = n;
+	        }
+			else{ 
+				tail->next = n; 
+				tail = n; 
+			}
+	    }
+	    void display(){
+	        SNode* p = head;
+	        while(p){
+	            cout << p->data;
+	            if(p->next){
+					cout << " ";
+				}
+	            p = p->next;
+	        }
+	        cout << "\n";
+	    }
+};
+
+DNode* convertToDoubly(SNode* sHead){
+    if(!sHead){
+		return NULL;
+	}
+    DNode* dHead = NULL;
+    DNode* dTail = NULL;
+    while(sHead){
+        DNode* n = new DNode(sHead->data);
+        if(!dHead){
+			dHead = dTail = n;
+		}
+        else{
+            dTail->next = n;
+            n->prev = dTail;
+            dTail = n;
+        }
+        sHead = sHead->next;
+    }
+    return dHead;
+}
+
+void displayDoubly(DNode* head){
+    DNode* p = head;
+    while(p){
+        cout << p->data;
+        if(p->next){
+			cout << " ";
+		}
+        p = p->next;
+    }
+    cout << "\n";
+}
+
+SNode* convertToCircular(SNode* sHead){
+    if (!sHead){
+		return NULL;
+	}
+    SNode* p = sHead;
+    while(p->next){
+		p = p->next;
+	}
+    p->next = sHead;
+    return sHead;
+}
+
+void displayCircular(SNode* head, int count) {
+    int i;
+	if(!head){ 
+		cout << "\n"; 
+		return; 
+	}
+    SNode* p = head;
+    for(i = 0; i < count; i++){
+        cout << p->data;
+        if(i < count - 1){
+			cout << " ";
+		}
+        p = p->next;
+    }
+    cout << "\n";
+}
+
+int main(){
+    SinglyList s;
+    int i, n, x;
+    cout << "Enter number of elements: ";
+    cin >> n;
+    cout << "Enter elements: " << endl;
+    for(i=0;i<n;i++){ 
+		cout << "Element " << i+1 << ": ";
+		cin >> x; 
+		s.insert(x); 
+	}
+    cout << "Original Singly: ";
+    s.display();
+    DNode* dHead = convertToDoubly(s.head);
+    cout << "\nConverted to Doubly: ";
+    displayDoubly(dHead);
+    SNode* cHead = convertToCircular(s.head);
+    cout << "\nConverted to Circular: ";
+    displayCircular(cHead, n);
+    return 0;
+}
