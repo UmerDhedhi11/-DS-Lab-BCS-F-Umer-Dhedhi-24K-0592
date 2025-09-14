@@ -1,0 +1,55 @@
+#include <iostream>
+using namespace std;
+
+class Node{
+	public:
+	    int data;
+	    Node* next;
+	    Node* child;
+	    Node(int v) : data(v), next(NULL), child(NULL){}
+};
+
+void flatten(Node* head){
+    Node* curr = head;
+    while(curr){
+        if(curr->child){
+            Node* nxt = curr->next;
+            curr->next = curr->child;
+            Node* tail = curr->child;
+            while(tail->next){
+				tail = tail->next;
+			}
+            tail->next = nxt;
+            curr->child = NULL;
+        }
+        curr = curr->next;
+    }
+}
+
+void printList(Node* head){
+    Node* p = head;
+    while(p){
+        cout << p->data;
+        if(p->next){          
+            cout << " ";
+        }
+        p = p->next;
+    }
+    cout << "\n";
+}
+
+
+int main(){
+    Node* n1 = new Node(1);
+    Node* n2 = new Node(2);
+    Node* n3 = new Node(3);
+    Node* n4 = new Node(4);
+    Node* n5 = new Node(5);
+    n1->next = n2; 
+	n2->next = n3;
+    n2->child = n4; 
+	n4->next = n5;
+    flatten(n1);
+    printList(n1);      
+    return 0;
+}
