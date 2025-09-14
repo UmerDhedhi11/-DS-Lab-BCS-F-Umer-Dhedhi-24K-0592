@@ -1,0 +1,112 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class Node{
+	public:
+	    int data;
+	    Node* next;
+	    Node(int v){ 
+			data = v; 
+			next = NULL; 
+		}
+};
+
+class SLL{
+	public:
+	    Node* head;
+	    Node* tail;
+	    SLL(){ 
+			head = tail = NULL; 
+		}
+	    void insert(int v){
+	        Node* n = new Node(v);
+	        if(!head){
+				head = tail = n;
+			}	
+	        else{
+				tail->next = n; 
+				tail = n; 
+			}
+	    }
+	    void display(){
+		    Node* p = head;
+		    while(p){
+		        cout << p->data;
+		        if(p->next){
+					cout << " ";
+				}
+		        p = p->next;           
+		    }
+		    cout << "\n";
+		}
+
+};
+
+Node* mergeNodes(Node* a, Node* b){
+    if(!a){
+		return b;
+	}
+    if(!b){
+		return a;
+	}
+    Node* head = NULL;
+    Node* tail = NULL;
+    if(a->data <= b->data){
+		head = tail = a; 
+		a = a->next; 
+	}
+    else{ 
+		head = tail = b; 
+		b = b->next;
+	}
+    while(a && b){
+        if(a->data <= b->data){ 
+			tail->next = a; 
+			tail = a; 
+			a = a->next; 
+		}
+        else{ 
+			tail->next = b; 
+			tail = b; 
+			b = b->next; 
+		}
+    }
+    if(a){
+		tail->next = a;
+	}
+    else{
+		tail->next = b;
+	}
+    return head;
+}
+
+
+int main(){
+    SLL A, B;
+    int n, m, x, i;
+    cout << "Enter size of first list: ";
+	cin >> n;
+	cout << "Enter elements: " << endl;
+    for(i = 0; i < n; i++){ 
+    	cout << "Element " << i+1 << ": ";
+		cin >> x; 
+		A.insert(x); 
+	}
+    cout << "\nEnter size of second list: ";
+	cin >> m;
+    cout << "Enter elements: " << endl;
+	for(i = 0; i < m; i++){ 
+		cout << "Element " << i+1 << ": ";
+		cin >> x; 
+		B.insert(x); 
+	}
+    Node* merged1 = mergeNodes(A.head, B.head);
+    Node* p = merged1;
+    while(p){ 
+		cout << p->data << " "; 
+		p = p->next; 
+	}
+    cout << "\n";
+    return 0;
+}
