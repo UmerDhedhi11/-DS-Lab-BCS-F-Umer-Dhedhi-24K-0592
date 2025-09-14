@@ -1,0 +1,88 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class Node{
+	public:
+	    int data;
+	    Node* next;
+	    Node(int v){ 
+			data = v; 
+			next = NULL; 
+		}
+};
+
+class SLL{
+	public:
+	    Node* head;
+	    Node* tail;
+	    SLL(){ 
+			head = tail = NULL; 
+		}
+	    void insert(int v){
+	        Node* n = new Node(v);
+	        if(!head){
+				head = tail = n;
+			}
+	        else{
+				tail->next = n; 
+				tail = n; 
+			}
+	    }
+	    void display(){
+	        Node* p = head;
+	        while(p){
+	            cout << p->data;
+	            if (p->next) cout << " ";
+	            p = p->next;
+	        }
+	        cout << "\n";
+	    }
+};
+
+Node* reverseK(Node* head, int k){
+    int i;
+	if(!head){
+		return NULL;
+	}
+    Node* curr = head;
+    Node* prev = NULL;
+    Node* next = NULL;
+    int count = 0;
+    Node* check = head;
+    for(i = 0; i < k; i++){
+        if(!check){
+			return head;
+		} 
+        check = check->next;
+    }
+    while(curr && count < k){
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+        count++;
+    }
+    if(next){
+        head->next = reverseK(next, k);
+	}
+    return prev;
+}
+
+int main(){
+    SLL list;
+    int i, n, k, x;
+    cout << "Enter size of list: ";
+    cin >> n;
+    cout << "Enter elements: " << endl; 
+    for (i = 0; i < n; i++){ 
+    	cout << "Element " << i+1 << ": ";
+		cin >> x; 
+		list.insert(x); 
+	}
+	cout << "Enter group size: ";
+    cin >> k;
+    list.head = reverseK(list.head, k);
+    list.display();
+    return 0;
+}
