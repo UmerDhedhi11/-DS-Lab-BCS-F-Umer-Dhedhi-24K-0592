@@ -1,0 +1,56 @@
+#include <iostream>
+using namespace std;
+
+void insertionSort(int arr[], int n){
+    int i, key, x;
+	for (i=1;i<n;i++){
+        key = arr[i];
+        x = i-1;
+        while(x>=0 && arr[x]>key){
+            arr[x+1] = arr[x];
+            x--;
+        }
+        arr[x+1] = key;
+    }
+}
+
+int main(){
+    int n, i, t;
+    cout << "Enter array size: ";
+    cin >> n;
+    int arr[n];
+    cout << "Enter elements: " << endl;
+    for(i=0;i<n;i++){
+		cout << "Element " << i+1 << ": ";	
+		cin >> arr[i];
+	}
+    insertionSort(arr, n);
+    for (i=0;i<n;i++){
+		cout << arr[i] << " ";
+    }
+	cout << endl;
+	cout << "Enter target value: ";
+    cin >> t;
+    int low = 0, high = n-1, mid, idx = -1;
+    while(low <= high){
+        mid = (low+high)/2;
+        if(arr[mid] == t){
+            idx = mid;
+            break;
+        } 
+		else if(arr[mid] < t){
+            low = mid+1;
+        }
+		else{
+            high = mid-1;
+    	}
+	}
+    if(idx != -1){
+	
+		cout << "Value found at index " << idx << endl;
+    }
+	else{
+		cout << "Value not Found" << endl;
+	}
+    return 0;
+}
