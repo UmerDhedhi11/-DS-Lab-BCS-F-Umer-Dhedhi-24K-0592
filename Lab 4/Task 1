@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+
+void linearSearch(int arr[], int n, int target){
+	int i, index;
+	bool found = false;
+	for(i=0;i<n;i++){
+		if(arr[i] == target){
+			found = true;
+			index = i;
+			break;
+		}
+	}
+	if(found == true){
+		cout << "Value found at index " << index << endl;
+	}
+	else{
+		cout << "Value not found" << endl;
+	}
+}
+
+int main(){
+	int i, n, t;
+	cout << "Enter size of array: ";
+	cin >> n;
+	int num[n];
+	cout << "Enter elements in array: " << endl;
+	for(i=0;i<n;i++){
+		cout << "Element " << i+1 << ": ";
+		cin >> num[i];
+	}
+	cout << "Enter value to search for: ";
+	cin >> t;
+	linearSearch(num, n, t);
+	return 0;
+}
