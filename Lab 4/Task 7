@@ -1,0 +1,127 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+void shellSort(int arr[], int n, int &comparisons, int &swaps){
+    int gap, temp, j, i;
+	for(gap=n/2;gap>0;gap/=2){
+        for(i=gap;i<n;i++){
+            temp = arr[i];
+            j = i;
+            while(j >= gap){
+                comparisons++;
+                if(arr[j-gap] > temp){
+                    arr[j] = arr[j-gap];
+                    j -= gap;
+                    swaps++;
+                } 
+				else{
+					break;
+				}
+            }
+            arr[j] = temp;
+        }
+    }
+}
+
+void bubbleSort(int arr[], int n, int &comparisons, int &swaps){
+    bool swapped = true;
+    int i, j, t;
+	for(i=0;i<n-1 && swapped;i++){
+        swapped = false;
+        for(j=0;j<n-i-1;j++){
+            comparisons++;
+            if(arr[j] > arr[j+1]){
+                t = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = t;
+                swaps++;
+                swapped = true;
+            }
+        }
+    }
+}
+
+void insertionSort(int arr[], int n, int &comparisons, int &swaps){
+    int i, j, key;
+	for(i=1;i<n;i++){
+        key = arr[i];
+        j = i - 1;
+        while(j >= 0){
+            comparisons++;
+            if(arr[j] > key){
+                arr[j+1] = arr[j];
+                swaps++;
+                j--;
+            } 
+			else{
+				break;
+			}
+        }
+        arr[j+1] = key;
+    }
+}
+
+void printArray(int arr[], int n) {
+	int i;
+    for(i=0;i<n;i++){
+		cout << arr[i] << "  ";
+    }
+	cout << endl;
+}
+
+int main(){
+    int i, n;
+    cout << "Enter array size: ";
+    cin >> n;
+    int *original = new int[n];
+    cout << "Enter elements: " << endl;
+    for(i=0;i<n;i++){
+		cout << "Elements " << i+1 << ": ";
+		cin >> original[i];
+	}
+    int *arr1 = new int[n];
+    int *arr2 = new int[n];
+    int *arr3 = new int[n];
+    for(int i = 0; i < n; i++){
+        arr1[i] = original[i];
+        arr2[i] = original[i];
+        arr3[i] = original[i];
+    }
+    int comp, swaps;
+    clock_t start, end;
+    comp = 0;
+	swaps = 0;
+    start = clock();
+    shellSort(arr1, n, comp, swaps);
+    end = clock();
+    double timeShell = double(end - start) / CLOCKS_PER_SEC;
+    cout << "Shell Sort -> Time: " << timeShell << "s, Comparisons: " << comp << ", Swaps: " << swaps << endl;
+    cout << "Sorted Array (Shell Sort): " << endl;
+    printArray(arr1, n);
+    comp = 0;
+	swaps = 0;
+    start = clock();
+    bubbleSort(arr2, n, comp, swaps);
+    end = clock();
+    double timeBubble = double(end - start) / CLOCKS_PER_SEC;
+    cout << "Bubble Sort -> Time: " << timeBubble << "s, Comparisons: " << comp << ", Swaps: " << swaps << endl;
+    cout << "Sorted Array (Bubble Sort): " << endl;
+    printArray(arr2, n);
+    comp = 0;
+	swaps = 0;
+    start = clock();
+    insertionSort(arr3, n, comp, swaps);
+    end = clock();
+    double timeInsertion = double(end - start) / CLOCKS_PER_SEC;
+    cout << "Insertion Sort -> Time: " << timeInsertion << "s, Comparisons: " << comp << ", Swaps: " << swaps << endl;
+	cout << "Sorted Array (Insertion Sort): " << endl;
+    printArray(arr3, n);
+    
+    delete[] original;
+    delete[] arr1;
+    delete[] arr2;
+    delete[] arr3;
+    return 0;
+}
