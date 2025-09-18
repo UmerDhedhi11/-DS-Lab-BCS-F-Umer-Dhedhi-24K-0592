@@ -1,0 +1,47 @@
+#include <iostream>
+using namespace std;
+
+int interpolationSearch(int arr[], int n, int target){
+    int low = 0, high = n - 1;
+    while (low<=high && target>=arr[low] && target<=arr[high]){
+        if(low == high){
+            if(arr[low] == target){
+				return low;
+			}
+            break;
+        }
+        int pos = low + ((target-arr[low])*(high-low))/(arr[high]-arr[low]);
+        if(arr[pos] == target){
+            return pos;
+        }
+        else if(arr[pos] < target){
+            low = pos + 1;
+        }
+        else{
+            high = pos - 1;
+    	}
+	}
+    return -1;
+}
+
+int main(){
+    int n, i, t;
+    cout << "Enter array size: ";
+    cin >> n;
+    int arr[n];
+    cout << "Enter elements: " << endl;
+    for(i=0;i<n;i++){
+		cout << "Element " << i+1 << ": ";
+		cin >> arr[i];
+	}
+	cout << "Enter target value: ";
+    cin >> t;
+    int idx = interpolationSearch(arr, n, t);
+    if(idx != -1){
+		cout << "Value found at index " << idx << endl;
+    }
+	else{
+		cout << "Not Found" << endl;
+	}
+    return 0;
+}
