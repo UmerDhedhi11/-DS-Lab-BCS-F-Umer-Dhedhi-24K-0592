@@ -1,0 +1,47 @@
+1.
+#include <iostream>
+using namespace std;
+
+int sumTail(int n, int total){
+if(n > 0){
+total += n;
+return sumTail(n-1, total);
+}
+else{
+return total;
+}
+}
+
+
+int main(){
+int n, total;
+cout << "Enter number to sum upto: ";
+cin >> n;
+total = 0;
+total = sumTail(n, total);
+cout << "\nTotal upto " << n << " = " << total;
+return 0;
+}
+
+2.
+#include <iostream>
+using namespace std;
+
+int sumNonTail(int n){
+if(n > 0){
+return n + sumNonTail(n-1);
+}
+else{
+return n;
+}
+}
+
+
+int main(){
+int n, total;
+cout << "Enter number to sum upto: ";
+cin >> n;
+total = sumNonTail(n);
+cout << "\nTotal upto " << n << " = " << total;
+return 0;
+}
