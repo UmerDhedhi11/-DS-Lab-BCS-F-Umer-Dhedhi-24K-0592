@@ -1,0 +1,46 @@
+1.
+#include <iostream>
+using namespace std;
+
+void printNumbers(int n){
+if(n >= 1){
+cout << n << " ";
+return printNumbers(n-1);
+}
+}
+
+int main(){
+int n, fact;
+cout << "Enter number to print upto: ";
+cin >> n;
+printNumbers(n);
+return 0;
+}
+
+2.
+#include <iostream>
+using namespace std;
+
+void functionB(int n);
+
+void functionA(int n){
+if(n >= 1){
+cout << n << " ";
+return functionB(n-1);
+}
+}
+
+void functionB(int n){
+if(n >= 1){
+cout << n << " ";
+return functionA(n-1);
+}
+}
+
+int main(){
+int n, fact;
+cout << "Enter number to print upto: ";
+cin >> n;
+functionA(n);
+return 0;
+}
