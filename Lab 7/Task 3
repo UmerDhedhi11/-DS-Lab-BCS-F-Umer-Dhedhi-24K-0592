@@ -1,0 +1,97 @@
+#include <iostream>
+using namespace std;
+
+class Node{
+	public:
+	    int data;
+	    Node* next;
+	    Node(int val){
+	        data = val;
+	        next = nullptr;
+	    }
+};
+
+class LinkedList{
+	public:
+	    Node* head;
+	    LinkedList(){
+	        head = nullptr;
+	    }
+	    void append(int val){
+	        Node* newNode = new Node(val);
+	        if(head == nullptr){
+	            head = newNode;
+	            return;
+	        }
+	        Node* cur = head;
+	        while(cur->next!=nullptr){
+	            cur = cur->next;
+	        }
+	        cur->next = newNode;
+	    }
+	    void print(){
+	        Node* cur = head;
+	        while(cur!=nullptr){
+	            cout << cur->data << " ";
+	            cur = cur->next;
+	        }
+	        cout << endl;
+	    }
+	    void swap(Node* a, Node* b){
+	        int temp = a->data;
+	        a->data = b->data;
+	        b->data = temp;
+	    }
+	    Node* partition(Node* start, Node* end){
+	        int pivot = end->data;
+	        Node* pIndex = start;
+	        Node* cur = start;
+	        while(cur!=end){
+	            if(cur->data<pivot){
+	                swap(cur, pIndex);
+	                pIndex = pIndex->next;
+	            }
+	            cur = cur->next;
+	        }
+	        swap(pIndex, end);
+	        return pIndex;
+	    }
+	    void quickSortRec(Node* start, Node* end){
+	        if(start!=nullptr && end!=nullptr && start!=end && start!=end->next){
+	            Node* p = partition(start, end);
+	            quickSortRec(start, p == start ? start : getPrev(start, p));
+	            quickSortRec(p->next, end);
+	        }
+	    }
+	    Node* getTail(Node* cur){
+	        while(cur!=nullptr && cur->next!=nullptr){
+	            cur = cur->next;
+	        }
+	        return cur;
+	    }
+	    Node* getPrev(Node* start, Node* node){
+	        Node* cur = start;
+	        while(cur!=nullptr && cur->next!=node){
+	            cur = cur->next;
+	        }
+	        return cur;
+	    }
+	    void quickSort(){
+	        Node* tail = getTail(head);
+	        quickSortRec(head, tail);
+	    }
+};
+
+int main(){
+    LinkedList list;
+    list.append(10);
+    list.append(7);
+    list.append(8);
+    list.append(9);
+    list.append(1);
+    list.append(5);
+    list.append(3);
+    list.quickSort();
+    list.print();
+    return 0;
+}
