@@ -1,0 +1,193 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Node{
+	public:
+	    string name;
+	    int score;
+	    Node* next;
+	    Node(string n="", int s=0){
+	        name=n;
+	        score=s;
+	        next=NULL;
+	    }
+};
+
+class LinkedList{
+	public:
+	    Node* head;
+	    int sz;
+	    LinkedList(){
+	        head=NULL;
+	        sz=0;
+	    }
+	    void insertEnd(string n, int s){
+	        Node* t = new Node(n,s);
+	        if(!head){
+	            head=t;
+	            sz++;
+	            return;
+	        }
+	        Node* cur=head;
+	        while(cur->next){
+				cur=cur->next;
+	        }
+			cur->next=t;
+	        sz++;
+	    }	
+	    Node* getNode(int index){
+	        Node* cur=head;
+	        int c=0;
+	        while(cur){
+	            if(c==index) return cur;
+	            cur=cur->next;
+	            c++;
+	        }
+	        return NULL;
+	    }
+	    void removeNode(int index){
+	        if(index<0 || index>=sz){
+				return;
+	        }
+			if(index==0){
+	            Node* t=head;
+	            head=head->next;
+	            delete t;
+	            sz--;
+	            return;
+	        }
+	        Node* cur=head;
+	        for(int i=0; i<index-1; i++){
+				cur=cur->next;
+			}
+	        Node* t=cur->next;
+	        cur->next=t->next;
+	        delete t;
+	        sz--;
+	    }
+	    void print(){
+	        Node* cur=head;
+	        while(cur){
+	            cout<<cur->name<<" "<<cur->score<<endl;
+	            cur=cur->next;
+	        }
+	    }
+};
+
+class RadixSort{
+	public:
+	    static int getMaxScore(LinkedList& L){
+	        int mx=0;
+	        Node* cur=L.head;
+	        while(cur){
+	            if(cur->score>mx){
+					mx=cur->score;
+	            }
+				cur=cur->next;
+	        }
+	        return mx;
+	    }
+	    static void countSort(LinkedList& L, int exp){
+	        Node* buckets[10][10001];
+	        int sizes[10]={0};
+	        Node* cur=L.head;
+	        while(cur){
+	            int digit=(cur->score/exp)%10;
+	            buckets[digit][sizes[digit]]=cur;
+	            sizes[digit]++;
+	            cur=cur->next;
+	        }
+	        L.head=NULL;
+	        Node* tail=NULL;
+	        for(int i=0;i<10;i++){
+	            for(int j=0;j<sizes[i];j++){
+	                if(!L.head){
+	                    L.head=buckets[i][j];
+	                    tail=buckets[i][j];
+	                }
+	                else{
+	                    tail->next=buckets[i][j];
+	                    tail=buckets[i][j];
+	                }
+	            }
+	        }
+	        if(tail){
+				tail->next=NULL;
+	    	}
+		}
+	    static void sort(LinkedList& L){
+	        int m=getMaxScore(L);
+	        for(int exp=1; m/exp>0; exp*=10){
+				countSort(L,exp);
+			}
+	    }
+};
+
+class Searcher{
+	public:
+	    static int binarySearch(LinkedList& L, string name, int score){
+	        int left=0, right=L.sz-1;
+	        while(left<=right){
+	            int mid=(left+right)/2;
+	            Node* m=L.getNode(mid);
+	            if(m->score==score){
+	                if(m->name==name){
+						return mid;
+					}
+	                int t=mid-1;
+	                while(t>=0){
+	                    Node* x=L.getNode(t);
+	                    if(x->score!=score){
+							break;
+						}
+	                    if(x->name==name){
+							return t;
+						}
+	                    t--;
+	                }
+	                t=mid+1;
+	                while(t<L.sz){
+	                    Node* x=L.getNode(t);
+	                    if(x->score!=score){
+							break;
+	                    }
+						if(x->name==name){
+							return t;
+	                    }
+						t++;
+	                }
+	                return -1;
+	            }
+	            if(m->score<score){
+					left=mid+1;
+	            }
+				else{	
+					right=mid-1;
+				}
+	        }
+	        return -1;
+	    }
+};
+
+int main(){
+    LinkedList L;
+    int n;
+    cin>>n;
+    for(int i=0;i<n;i++){
+        string name;
+        int score;
+        cin>>name>>score;
+        L.insertEnd(name,score);
+    }
+    RadixSort::sort(L);
+    string qname;
+    int qscore;
+    cin>>qname>>qscore;
+    int idx=Searcher::binarySearch(L,qname,qscore);
+    if(idx!=-1){
+		L.removeNode(idx);
+    }
+	L.print();
+	return 0;
+}
