@@ -1,0 +1,91 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Runner{
+	public:
+	    string name;
+	    int time;	
+	    Runner(){
+	        name = "";
+	        time = 0;
+	    }
+};
+
+class Marathon{
+	public:
+	    Runner arr[10];
+		int i, j;	
+	    void input(){
+	        cout << "Enter the name and finish time (in seconds) for 10 participants:" << endl;
+	        for(i=0;i<10;i++){
+	            cout << "Participant " << i + 1 << " Name: ";
+	            cin >> arr[i].name;
+	            cout << "Participant " << i + 1 << " Time: ";
+	            cin >> arr[i].time;
+	        }
+	    }
+	    void mergeArrays(Runner a[], int left, int mid, int right){
+	        int n1 = mid - left + 1;
+	        int n2 = right - mid;
+	        Runner* L = new Runner[n1];
+	        Runner* R = new Runner[n2];
+	        for(i=0;i<n1;i++){
+	            L[i] = a[left+i];
+	        }
+	        for(j=0;j<n2;j++){
+	            R[j] = a[mid+1+j];
+	        }
+	        i = 0;
+	        j = 0;
+	        int k = left;	
+	        while(i<n1 && j<n2){
+	            if(L[i].time <= R[j].time){
+	                a[k] = L[i];
+	                i++;
+	            }
+	            else{
+	                a[k] = R[j];
+	                j++;
+	            }
+	            k++;
+	        }
+	        while(i<n1){
+	            a[k] = L[i];
+	            i++;
+	            k++;
+	        }
+	        while(j<n2){
+	            a[k] = R[j];
+	            j++;
+	            k++;
+	        }
+	        delete[] L;
+	        delete[] R;
+	    }
+	    void mergeSort(Runner a[], int left, int right){
+	        if(left < right){
+	            int mid = (left+right)/2;
+	            mergeSort(a, left, mid);
+	            mergeSort(a, mid + 1, right);
+	            mergeArrays(a, left, mid, right);
+	        }
+	    }
+	    void sortRunners(){
+	        mergeSort(arr, 0, 9);
+	    }
+	    void displayTop5(){
+	        cout << "\nTop 5 Fastest Runners:\n";
+	        for(i=0;i<5;i++){
+	            cout << arr[i].name << " - " << arr[i].time << " seconds" << endl;
+	        }
+	    }
+};
+
+int main(){
+    Marathon m;
+    m.input();
+    m.sortRunners();
+    m.displayTop5();
+    return 0;
+}
