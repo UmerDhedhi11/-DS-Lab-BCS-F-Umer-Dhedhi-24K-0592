@@ -1,0 +1,131 @@
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+class Student{
+	public:
+	    string name;
+	    int roll;
+	    int score;
+	    Student(){
+		}
+	    Student(string n, int r, int s){
+	        name = n;
+	        roll = r;
+	        score = s;
+	    }
+};
+
+class SNode{
+	public:
+	    Student data;
+	    SNode* left;
+	    SNode* right;
+	    SNode(Student s){
+			data = s; 
+			left = NULL; 
+			right = NULL;
+		}
+};
+
+class StudentBST{
+	public:
+	    SNode* root;
+	    StudentBST() : root(NULL){}
+	    SNode* insert(SNode* node, Student s){
+		    if(!node){
+				return new SNode(s);
+		    }
+			if(s.name < node->data.name){
+		        node->left = insert(node->left, s);
+		    }
+		    else if(s.name > node->data.name){
+		        node->right = insert(node->right, s);
+		    }
+		    else{
+		        return node; 
+		    }
+		    return node;
+		}
+	    void insert(Student s){
+	        root = insert(root, s);
+	    }
+	    SNode* search(SNode* node, string name){
+	        if(!node || node->data.name == name){
+				return node;
+	        }
+			if(name < node->data.name){
+				return search(node->left, name);
+	        }
+			return search(node->right, name);
+	    }
+	    Student getMaxScore(SNode* node, Student best){
+	        if(!node){
+				return best;
+	        }
+			if(node->data.score > best.score){
+				best = node->data;
+	        }
+			best = getMaxScore(node->left, best);
+	        best = getMaxScore(node->right, best);
+	        return best;
+	    }
+	    SNode* removeLow(SNode* node){
+	        if(!node){
+				return NULL;
+	        }
+			node->left = removeLow(node->left);
+	        node->right = removeLow(node->right);
+	        if(node->data.score < 10){
+	            if(!node->left){
+	                SNode* t = node->right;
+	                delete node;
+	                return t;
+	            }
+	            if(!node->right){
+	                SNode* t = node->left;
+	                delete node;
+	                return t;
+	            }
+	        }
+	        return node;
+	    }
+	    void removeLowScore(){
+	        root = removeLow(root);
+	    }
+	    void inorder(SNode* node){
+	        if(!node){
+				return;
+			}
+	        inorder(node->left);
+	        cout << node->data.name << " " << node->data.score << endl;
+	        inorder(node->right);
+	    }
+	    void print(){
+	        inorder(root);
+	    }
+};
+
+int main(){
+	Student arr[10] ={
+        {"Umer", 592, 20}, {"Rafay",866, 23}, {"Saim",808, 21}, {"Huzaifa",533, 20},
+        {"Sameed",1036,21},{"Maarij",550,18},{"Najam",754,5},{"Saad",997,18},
+        {"Burair",804,25},{"Mutahir",030,7}
+    };
+    int i;
+	StudentBST s;
+    srand(time(0));
+    for(i=0;i<7;i++){
+		s.insert(arr[rand()%10]);
+	}
+    cout << "Students in BST:\n";
+    s.print();
+    cout << "Removing students with score < 10\n";
+    s.removeLowScore();
+    s.print();
+    Student maxS = s.getMaxScore(s.root, Student("",0,-1));
+    cout << "Max Score: " << maxS.name << " " << maxS.score << endl;
+	return 0;
+}
