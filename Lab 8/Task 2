@@ -1,0 +1,164 @@
+#include <iostream>
+#include <string>
+#include <cstdlib>
+using namespace std;
+
+class Combatant{
+	public:
+	    string name;
+	    int hp;
+	    int attack;
+	    int id;
+	    Combatant(){
+		}
+	    Combatant(string n, int h, int a, int i){
+	        name = n;
+	        hp = h;
+	        attack = a;
+	        id = i;
+	    }
+};
+
+class CNode{
+	public:
+	    Combatant data;
+	    CNode* left;
+	    CNode* right;
+	    CNode(Combatant c){
+			data = c; 
+			left = NULL;
+			right = NULL;
+		}
+};
+
+class CombatBST{
+	public:
+	    CNode* root;
+	    CombatBST() : root(NULL){}
+	    CNode* insert(CNode* node, Combatant c){
+	        if(!node){
+				return new CNode(c);
+	        }
+			if(c.id < node->data.id){
+				node->left = insert(node->left, c);
+	        }
+			else{
+				node->right = insert(node->right, c);
+	        }
+			return node;
+	    }
+	    void insert(Combatant c){
+	        root = insert(root, c);
+	    }
+	    CNode* getLeftmost(CNode* node){
+	        while (node && node->left) node = node->left;
+	        return node;
+	    }
+	    CNode* remove(CNode* node, int id){
+	        if (!node){
+				return NULL;
+	        }
+			if(id < node->data.id){
+				node->left = remove(node->left, id);
+	        }
+			else if(id > node->data.id){
+				node->right = remove(node->right, id);
+	        }
+			else{
+	            if(!node->left){
+	                CNode* temp = node->right;
+	                delete node;
+	                return temp;
+	            }
+	            if(!node->right){
+	                CNode* temp = node->left;
+	                delete node;
+	                return temp;
+	            }
+	            CNode* temp = getLeftmost(node->right);
+	            node->data = temp->data;
+	            node->right = remove(node->right, temp->data.id);
+	        }
+	        return node;
+	    }
+	    void remove(int id){
+	        root = remove(root, id);
+	    }
+	    void printInorder(CNode* node){
+	        if(!node){
+				return;
+			}
+	        printInorder(node->left);
+	        cout << node->data.name << "(" << node->data.hp << ") ";
+	        printInorder(node->right);
+	    }
+	    void print(){
+	        printInorder(root);
+	        cout << endl;
+	    }
+};
+
+int damage(int base){
+    return base + rand() % 5;
+}
+
+void battleRound(CombatBST& p, CombatBST& e, int round){
+    cout << "Round " << round << endl;
+    cout << "Heroes: ";
+    p.print();
+    cout << "Enemies: ";
+    e.print();
+    CNode* ph = p.getLeftmost(p.root);
+    CNode* eh = e.getLeftmost(e.root);
+    cout << ph->data.name << " attacks " << eh->data.name << endl;
+    int d = damage(ph->data.attack);
+    eh->data.hp -= d;
+    cout << "Damage: " << d << endl;
+    if(eh->data.hp <= 0){
+        cout << eh->data.name << " defeated\n";
+        e.remove(eh->data.id);
+    }
+    if (!e.root){
+		return;
+	}
+    ph = p.getLeftmost(p.root);
+    eh = e.getLeftmost(e.root);
+    cout << eh->data.name << " attacks " << ph->data.name << endl;
+    d = damage(eh->data.attack);
+    ph->data.hp -= d;
+    cout << "Damage: " << d << endl;
+    if(ph->data.hp <= 0){
+        cout << ph->data.name << " defeated\n";
+        p.remove(ph->data.id);
+    }
+}
+
+void startBattle(){
+    CombatBST players, enemies;
+    players.insert(Combatant("Hero1", 20, 6, 1));
+    players.insert(Combatant("Hero2", 24, 5, 2));
+    players.insert(Combatant("Hero3", 22, 7, 3));
+    players.insert(Combatant("Hero4", 18, 5, 4));
+    players.insert(Combatant("Hero5", 26, 4, 5));
+    enemies.insert(Combatant("Enemy1", 18, 5, 10));
+    enemies.insert(Combatant("Enemy2", 20, 6, 11));
+    enemies.insert(Combatant("Enemy3", 22, 4, 12));
+    enemies.insert(Combatant("Enemy4", 24, 7, 13));
+    enemies.insert(Combatant("Enemy5", 26, 5, 14));
+    int round = 1;
+    while(players.root && enemies.root){
+        battleRound(players, enemies, round);
+        round++;
+    }
+    if(players.root){
+		cout << "Heroes Win\n";
+    }
+	else{
+		cout << "Enemies Win\n";
+	}
+}
+
+int main(){
+	startBattle();
+	return 0;
+}
