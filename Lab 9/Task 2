@@ -6,9 +6,9 @@ class Node{
 	    int key, height;
 	    Node *left, *right;
 	    Node(int k){
-			key=k;
-			height=1;
-			left=right=0;
+			key = k;
+			height = 1;
+			left = right = 0;
 		}
 };
 
@@ -35,21 +35,21 @@ class AVL{
 			}
 		}
 	    Node* rightRotate(Node* y){
-	        Node* x=y->left;
-	        Node* t=x->right;
-	        x->right=y;
-	        y->left=t;
-	        y->height=mx(h(y->left),h(y->right))+1;
-	        x->height=mx(h(x->left),h(x->right))+1;
+	        Node* x = y->left;
+	        Node* t = x->right;
+	        x->right = y;
+	        y->left = t;
+	        y->height = mx(h(y->left),h(y->right))+1;
+	        x->height = mx(h(x->left),h(x->right))+1;
 	        return x;
 	    }
 	    Node* leftRotate(Node* x){
-	        Node* y=x->right;
-	        Node* t=y->left;
+	        Node* y = x->right;
+	        Node* t = y->left;
 	        y->left=x;
 	        x->right=t;
-	        x->height=mx(h(x->left),h(x->right))+1;
-	        y->height=mx(h(y->left),h(y->right))+1;
+	        x->height = mx(h(x->left),h(x->right))+1;
+	        y->height = mx(h(y->left),h(y->right))+1;
 	        return y;
 	    }
 	    Node* insert(Node* n,int k){
@@ -57,12 +57,12 @@ class AVL{
 				return new Node(k);
 	        }
 			if(k<n->key){
-				n->left=insert(n->left,k);
+				n->left = insert(n->left,k);
 	        }
 			else{
-				n->right=insert(n->right,k);
+				n->right = insert(n->right,k);
 			}
-	        n->height=mx(h(n->left),h(n->right))+1;
+	        n->height = mx(h(n->left),h(n->right))+1;
 	        int b=bf(n);
 	        if(b>1 && k<n->left->key){
 				return rightRotate(n);
@@ -71,11 +71,11 @@ class AVL{
 				return leftRotate(n);
 	        }
 			if(b>1 && k>n->left->key){
-				n->left=leftRotate(n->left);
+				n->left = leftRotate(n->left);
 				return rightRotate(n);
 			}
 	        if(b<-1 && k<n->right->key){
-				n->right=rightRotate(n->right);
+				n->right = rightRotate(n->right);
 				return leftRotate(n);
 			}
 	        return n;
@@ -84,7 +84,7 @@ class AVL{
 			if(!n){
 				return;
 			}
-			cout<<n->key<<" ";
+			cout << n->key << " ";
 			preorder(n->left);
 			preorder(n->right);
 		}
@@ -93,12 +93,12 @@ class AVL{
 int main(){
     AVL t;
     int i;
-    int arr[]={50,30,70,20,40,60,80};
+    int arr[7] = {50,30,70,20,40,60,80};
     for(i=0;i<7;i++){
-		t.root=t.insert(t.root,arr[i]);
+		t.root = t.insert(t.root,arr[i]);
     }
-	t.root=t.insert(t.root,55);
-    t.root=t.leftRotate(t.root);
+	t.root = t.insert(t.root,55);
+    t.root = t.leftRotate(t.root);
     t.preorder(t.root);
     return 0;
 }
