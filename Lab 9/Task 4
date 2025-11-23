@@ -1,0 +1,123 @@
+#include <iostream>
+using namespace std;
+
+class Node{
+	public:
+	    int key,height;
+	    Node *left,*right;
+	    Node(int k){
+			key = k;
+			height = 1;
+			left = right = 0;
+		}
+};
+
+class AVL{
+	public:
+	    Node* root = 0;
+	    int h(Node* n){
+			if(n){
+				return n->height;
+			}
+			else{
+				return 0;
+			}
+		}
+	    int mx(int a,int b){
+			if(a>b){
+				return a;
+			}
+			else{
+				return b;
+			}
+		}
+	    int bf(Node* n){
+			return h(n->left)-h(n->right);
+		}
+	    Node* rightRotate(Node* y){
+	        Node* x = y->left;
+	        Node* t = x->right;
+	        x->right = y;
+	        y->left = t;
+	        y->height = mx(h(y->left),h(y->right))+1;
+	        x->height = mx(h(x->left),h(x->right))+1;
+	        return x;
+	    }
+	    Node* leftRotate(Node* x){
+	        Node* y = x->right;
+	        Node* t = y->left;
+	        y->left = x;
+	        x->right = t;
+	        x->height = mx(h(x->left),h(x->right))+1;
+	        y->height = mx(h(y->left),h(y->right))+1;
+	        return y;
+	    }
+	    Node* insert(Node* n,int k){
+	        if(!n){
+				return new Node(k);
+	        }
+			if(k<n->key){
+				n->left = insert(n->left,k);
+	        }
+			else{
+				n->right = insert(n->right,k);
+	        }
+			n->height = mx(h(n->left),h(n->right))+1;
+	        int b = bf(n);
+	        if(b>1 && k<n->left->key){
+				return rightRotate(n);
+			}
+	        if(b<-1 && k>n->right->key){
+				return leftRotate(n);
+			}
+	        if(b>1 && k>n->left->key){
+				n->left = leftRotate(n->left);
+				return rightRotate(n);
+			}
+			if(b<-1 && k<n->right->key){
+				n->right = rightRotate(n->right);
+				return leftRotate(n);
+			}
+	        return n;
+	    }
+	    int count(Node* n){
+	        if(!n){
+				return 0;
+			}
+	        return 1+count(n->left)+count(n->right);
+	    }
+	    int kthSmall(Node* n,int k){
+	        int L = count(n->left);
+	        if(k==L+1){
+				return n->key;
+	        }
+			if(k<=L){
+				return kthSmall(n->left,k);
+	        }
+			return kthSmall(n->right,k-L-1);
+	    }
+	    int kthLarge(Node* n,int k){
+	        int R = count(n->right);
+	        if(k==R+1){
+				return n->key;
+	        }
+			if(k<=R){
+				return kthLarge(n->right,k);
+	        }
+			return kthLarge(n->left,k-R-1);
+	    }
+};
+
+int main(){
+    AVL t;
+    int k, i;
+    int arr[7] = {50,30,70,20,40,60,80};
+    for(i=0;i<7;i++){
+		t.root = t.insert(t.root,arr[i]);
+    }
+	cout << "Enter k to find the k-th smallest and k-th largest values: ";
+	cin >> k;
+    cout << t.kthSmall(t.root,k) << endl;
+    cout << t.kthLarge(t.root,k) << endl;
+    cout << t.h(t.root->left) << " " << t.h(t.root->right);
+}
