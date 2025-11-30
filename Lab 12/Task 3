@@ -1,0 +1,92 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+void preprocessBad(char pat[], int m, int bad[]){
+    int i;
+	for(i=0;i<256;i++){
+		bad[i] = -1;
+	}
+    for(i=0;i<m;i++){
+		bad[(unsigned char)pat[i]] = i;
+	}
+}
+
+void preprocessGS(char pat[], int m, int gs[]){
+    int f[200], s[200];
+    int i2;
+    int i = m, j = m+1;
+    f[i] = j;
+    while(i>0){
+        while(j<=m && pat[i-1] != pat[j-1]){
+            if(s[j] == 0){
+				s[j] = j-i;	
+			}
+            j = f[j];
+        }
+        i--; j--;
+        f[i] = j;
+    }
+    for(i2=0;i2<=m;i2++){
+		gs[i2] = m;
+	}
+    int j2 = f[0];
+    for(i2=0;i2<m;i2++){
+        if(gs[i2] == m){
+			gs[i2] = j2;
+		}
+        if(i2 == j2){
+			j2 = f[j2];
+		}
+    }
+    for(i2=0;i2<m;i2++){
+		gs[i2] = m - i2 - 1;
+	}
+}
+
+void boyerMoore(char text[], char pat[]){
+    int n = strlen(text);
+    int m = strlen(pat);
+    int bad[256];
+    int gs[200];
+    preprocessBad(pat,m,bad);
+    preprocessGS(pat,m,gs);
+    int idx[1000];
+    int k = 0;
+    int s = 0;
+    int i;
+    while(s <= n-m){
+        int j = m-1;
+        while(j>=0 && pat[j] == text[s+j]){
+			j--;
+		}
+        if(j<0){
+            idx[k++] = s;
+            s += gs[0];
+        } 
+		else{
+            int bc = j - bad[(unsigned char)text[s+j]];
+            int gsShift = gs[j];
+            if(bc > gsShift){
+				s += bc;
+			}
+            else{
+				s += gsShift;
+			}
+        }
+    }
+    cout << "[";
+    for(i=0;i<k;i++){
+        cout << idx[i];
+        if(i<k-1){
+			cout<<", ";
+		}
+    }
+    cout << "]" << endl;
+}
+
+int main(){
+    char dna[200] = "ACGTACGTGACG";
+    char pat[20] = "ACG";
+    boyerMoore(dna, pat);
+}
