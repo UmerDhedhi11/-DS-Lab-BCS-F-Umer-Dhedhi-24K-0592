@@ -1,0 +1,90 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int mat[6][6];
+int listAdj[6][6];
+int listCount[6];
+
+void addEdge(int u,int v){
+    mat[u][v] = 1;
+    mat[v][u] = 1;
+    listAdj[u][listCount[u]++] = v;
+    listAdj[v][listCount[v]++] = u;
+}
+
+void BFS(int start){
+    int q[20];
+    int front = 0, rear = 0;
+    int vis[6];
+    int i;
+    for(i=1;i<=5;i++){
+		vis[i] = 0;
+	}
+    vis[start] = 1;
+    q[rear++] = start;
+    while(front < rear){
+        int u = q[front++];
+        cout << u << " ";
+        for(i=0;i<listCount[u];i++){
+            int v = listAdj[u][i];
+            if(!vis[v]){
+                vis[v] = 1;
+                q[rear++] = v;
+            }
+        }
+    }
+    cout << endl;
+}
+
+void DFSrec(int u,int vis[]){
+    vis[u] = 1;
+    int i;
+    cout << u << " ";
+    for(i=0;i<listCount[u];i++){
+        int v = listAdj[u][i];
+        if(!vis[v]){
+			DFSrec(v,vis);
+		}
+    }
+}
+
+void DFS(int start){
+    int vis[6];
+    int i;
+    for(i=1;i<=5;i++){
+		vis[i] = 0;
+	}
+    DFSrec(start,vis);
+    cout << endl;
+}
+
+int main(){
+	int i, j;
+    memset(mat,0,sizeof(mat));
+    memset(listCount,0,sizeof(listCount));
+    addEdge(1,4);
+    addEdge(1,2);
+    addEdge(2,4);
+    addEdge(2,5);
+    addEdge(3,5);
+    cout << "Adjacency Matrix:" << endl;
+    for(i=1;i<=5;i++){
+        for(j=1;j<=5;j++){
+			cout << mat[i][j] << " ";
+		}
+        cout << endl;
+    }
+    cout << "Adjacency List:" << endl;
+    for(i=1;i<=5;i++){
+        cout << i << ": ";
+        for(j=0;j<listCount[i];j++){
+			cout << listAdj[i][j] << " ";
+		}
+        cout << endl;
+    }
+    cout << "BFS: ";
+    BFS(1);
+    cout<<"DFS: ";
+    DFS(1);
+}
