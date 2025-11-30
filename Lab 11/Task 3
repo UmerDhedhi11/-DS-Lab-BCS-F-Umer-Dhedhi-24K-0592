@@ -1,0 +1,84 @@
+#include <iostream>
+using namespace std;
+
+struct Node{
+    int data;
+    Node* next;
+    Node(int d){
+        data = d;
+        next = 0;
+    }
+};
+
+class Hash{
+	private:
+	    static const int size = 10;
+	    Node* table[size];
+	    int i;
+	    int hashFunc(int v){
+	        return v % size;
+	    }
+	public:
+	    Hash(){
+	        for(i=0;i<size;i++){
+				table[i] = 0;
+	    	}
+		}
+	    void insert(int v){
+	        int index = hashFunc(v);
+	        Node* n = new Node(v);
+	        n->next = table[index];
+	        table[index] = n;
+	    }
+	    void removeValue(int v){
+	        int index = hashFunc(v);
+	        Node* t = table[index];
+	        Node* prev = 0;
+	        while(t){
+	            if(t->data == v){
+	                if(prev){
+						prev->next = t->next;
+	                }
+					else{
+						table[index] = t->next;
+	                }
+					delete t;
+	                return;
+	            }
+	            prev = t;
+	            t = t->next;
+	        }
+	    }
+	
+	    bool search(int v){
+	        int index = hashFunc(v);
+	        Node* t = table[index];
+	        while(t){
+	            if(t->data == v){
+					return true;
+	            }
+				t = t->next;
+	        }
+	        return false;
+	    }
+	
+	    void display(){
+	        for(i=0;i<size;i++){
+	            cout << i << ": ";
+	            Node* t = table[i];
+	            while(t){
+	                cout << t->data << " ";
+	                t = t->next;
+	            }
+	            cout << endl;
+	        }
+	    }
+};
+
+int main(){
+    Hash h;
+    h.insert(10);
+    h.insert(20);
+    h.insert(25);
+    h.display();
+}
