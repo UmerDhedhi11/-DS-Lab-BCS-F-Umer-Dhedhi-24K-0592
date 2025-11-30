@@ -1,0 +1,72 @@
+#include <iostream>
+using namespace std;
+
+struct PairNode{
+    int a, b, sum;
+    PairNode* next;
+    PairNode(int x, int y, int s){
+        a = x;
+        b = y;
+        sum = s;
+        next = 0;
+    }
+};
+
+class PairHash{
+	private:
+	    static const int size = 100;
+	    PairNode* table[size];
+		int i;
+	    int hashFunc(int s){
+	        if(s<0){
+				s = -s;
+	        }
+			return s % size;
+	    }
+	public:
+	    PairHash(){
+	        for(i=0;i<size;i++){
+				table[i] = 0;
+	    	}
+		}
+	    PairNode* search(int s, int x, int y){
+	        int index = hashFunc(s);
+	        PairNode* t = table[index];
+	        while(t){
+	            if(t->sum == s &&
+	               t->a != x && t->a != y &&
+	               t->b != x && t->b != y){
+	            	return t;
+	            }
+	            t = t->next;
+	        }
+	        return 0;
+	    }
+	    void insert(int a, int b, int s){
+	        int index = hashFunc(s);
+	        PairNode* n = new PairNode(a,b,s);
+	        n->next = table[index];
+	        table[index] = n;
+	    }
+};
+
+int main(){
+    int arr[] = {3,4,7,1,2,9,8};
+    int n = sizeof(arr)/sizeof(arr[0]);
+	int a, b, i, j, sum;
+    PairHash H;
+    for(i=0;i<n;i++){
+        for(j=i+1;j<n;j++){
+            a = arr[i];
+            b = arr[j];
+            sum = a + b;
+            PairNode* p = H.search(sum, a, b);
+            if(p){
+                cout << "(" << p->a << "," <<p->b << ") and (" << a << "," << b << ")";
+                return 0;
+            }
+            H.insert(a,b,sum);
+        }
+    }
+    cout << "No pairs found";
+}
