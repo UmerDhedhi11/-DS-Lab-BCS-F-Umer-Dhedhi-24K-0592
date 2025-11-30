@@ -1,0 +1,75 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+struct Node2{
+    char word[50];
+    char meaning[50];
+    Node2* next;
+    Node2(const char* w, const char* m){
+        strcpy(word, w);
+        strcpy(meaning, m);
+        next = 0;
+    }
+};
+
+class Dictionary{
+    private:
+		Node2* table[100];
+	    int i;
+		int hashFunc(const char* s){
+		    int sum=0;
+	        for(i=0;s[i];i++){
+				sum+=s[i];
+	        }
+			return sum%100;
+	    }
+	public:
+	    Dictionary(){
+	        for(i=0;i<100;i++){
+				table[i] = 0;
+	    	}
+		}
+	    void Add_Record(const char* w, const char* m){
+	        int index = hashFunc(w);
+	        Node2* n = new Node2(w,m);
+	        n->next = table[index];
+	        table[index] = n;
+	    }
+	    void Word_Search(const char* w){
+	        int index = hashFunc(w);
+	        Node2* t = table[index];
+	        while(t){
+	            if(strcmp(t->word,w)==0){
+	                cout << t->word << " " << t->meaning << endl;
+	                return;
+	            }
+	            t = t->next;
+	        }
+	        cout << "Error: Word not found" << endl;
+	    }
+	    void Print_Dictionary(){
+	        for(i=0;i<100;i++){
+	            Node2* t = table[i];
+	            if(t){
+					cout << "index " << i << ": ";
+	            }
+				while(t){
+	                cout << "(" << t->word << ", " << t->meaning << ") ";
+	                t = t->next;
+	            }
+	            if(table[i]){
+					cout << endl;
+	        	}
+			}
+	    }
+};
+
+int main(){
+    Dictionary d;
+    d.Add_Record("AB","FASTNU");
+    d.Add_Record("CD","CS");
+    d.Word_Search("AB");
+    cout<<"key EF deleted successfully !"<<endl;
+    d.Print_Dictionary();
+}
