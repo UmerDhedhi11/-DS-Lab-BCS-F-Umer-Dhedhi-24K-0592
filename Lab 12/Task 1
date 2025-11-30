@@ -1,0 +1,42 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+void bruteForceSearch(char text[], char pat[]){
+    int n = strlen(text);
+    int m = strlen(pat);
+    int idx[1000];
+    int count = 0;
+    int comps = 0;
+    int k = 0;
+	int i, j;
+    for(i=0;i<=n-m;i++){
+        j = 0;
+        while(j<m){
+            comps++;
+            if(text[i+j] != pat[j]){
+				break;
+			}
+            j++;
+        }
+        if(j==m){
+            idx[k++] = i;
+        }
+    }
+    cout << "[";
+    for(i=0;i<k;i++){
+        cout << idx[i];
+        if(i<k-1){
+			cout << ", ";
+    	}
+	}
+    cout << "]" << endl;
+    cout << "Comparisons = " << comps << endl;
+}
+
+int main(){
+    char text[200] = "the quick brown fox jumps over the lazy dog";
+    char pat[50] = "the";
+    bruteForceSearch(text, pat);
+	return 0;
+}
