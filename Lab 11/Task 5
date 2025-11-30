@@ -1,0 +1,55 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+struct Student{
+    int roll;
+    char name[50];
+    bool used;
+    bool deleted;
+};
+
+class StudentHashTable{
+    private:
+		Student table[15];
+		int i, a;
+	public:
+	    StudentHashTable(){
+	        for(i=0;i<15;i++){
+	            table[i].used = false;
+	            table[i].deleted = false;
+	        }
+	    }
+	    void InsertRecord(int roll, const char* name){
+	        int index = roll % 15;
+	        for(a=0;a<15;a++){
+	            int idx = (index + a*a) % 15;
+	            if(!table[idx].used || table[idx].deleted){
+	                table[idx].roll = roll;
+	                strcpy(table[idx].name, name);
+	                table[idx].used = true;
+	                table[idx].deleted = false;
+	                return;
+	            }
+	        }
+	    }
+	    void SearchRecord(int roll){
+	        int index = roll % 15;
+	        for(a=0;a<15;a++){
+	            int idx = (index + a*a) % 15;
+	            if(table[idx].used && !table[idx].deleted && table[idx].roll == roll){
+	                cout << table[idx].name << endl;
+	                return;
+	            }
+	        }
+	        cout << "Record not found" << endl;
+	    }
+};
+
+int main(){
+    StudentHashTable h;
+    h.InsertRecord(808,"Rafay");
+    h.InsertRecord(592,"Umer");
+    h.SearchRecord(997);
+	h.SearchRecord(592);
+}
