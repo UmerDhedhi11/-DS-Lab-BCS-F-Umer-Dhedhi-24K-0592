@@ -1,0 +1,59 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+struct Node{
+    char key[50];
+    char value[50];
+    Node* next;
+    Node(const char* k, const char* v){
+        strcpy(key, k);
+        strcpy(value, v);
+        next = 0;
+    }
+};
+
+class HashTable{
+	private:
+	    static const int size = 10;
+	    Node* table[size];
+	    int i, index;
+		int hashFunc(const char* s){
+	        int sum = 0;
+	        for(i=0;s[i];i++){
+				sum += s[i];
+	        }
+			return sum % size;
+	    }
+	public:
+	    HashTable(){
+	        for(i=0;i<size;i++){
+				table[i] = 0;
+	    	}
+		}
+	    void insert(const char* k, const char* v){
+	        index = hashFunc(k);
+	        Node* n = new Node(k,v);
+	        n->next = table[index];
+	        table[index] = n;
+	    }
+	    void display(){
+	        for(i=0;i<size;i++){
+	            Node* t = table[i];
+	            while(t){
+	                cout << t->key << " -> " << t->value << "  ";
+	                t = t->next;
+	            }
+	            cout << endl;
+	        }
+	    }
+};
+
+int main(){
+    HashTable myhash;
+    myhash.insert("A","aaaaa");
+    myhash.insert("B","bbbbb");
+    myhash.insert("C","ccccc");
+    myhash.insert("A","zzzzz");
+    myhash.display();
+}
